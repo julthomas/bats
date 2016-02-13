@@ -20,6 +20,7 @@ help() {
   echo "  -h, --help     Display this help message"
   echo "  -p, --pretty   Show results in pretty format (default for terminals)"
   echo "  -t, --tap      Show results in TAP format"
+  echo "  -v, --verbose  Always print tests output, should they fail or not"
   echo "  -V, --version  Display the version number"
   echo
   echo "  For more information, see https://github.com/sstephenson/bats"
@@ -55,6 +56,7 @@ expand_path() {
 BATS_LIBEXEC="$(abs_dirname "$0")"
 export BATS_PREFIX="$(abs_dirname "$BATS_LIBEXEC")"
 export BATS_CWD="$(abs_dirname .)"
+export BATS_VERBOSE
 export PATH="$BATS_LIBEXEC:$PATH"
 
 options=()
@@ -98,6 +100,9 @@ for option in "${options[@]}"; do
     ;;
   "p" | "pretty" )
     pretty="1"
+    ;;
+  "v" | "verbose" )
+    BATS_VERBOSE="1"
     ;;
   * )
     usage >&2
