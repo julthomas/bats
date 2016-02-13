@@ -30,7 +30,7 @@ update_screen_width
 
 begin() {
   go_to_column 0
-  printf_with_truncation $(( $count_column_left - 1 )) "   %s" "$name"
+  printf_with_truncation $(( $count_column_left - 1 )) '[....]    %s' "$name"
   clear_to_end_of_line
   go_to_column $count_column_left
   printf "%${#count}s/${count}" "$index"
@@ -39,7 +39,11 @@ begin() {
 
 pass() {
   go_to_column 0
-  printf " ✓ %s" "$name"
+  printf '['
+  set_color 2
+  printf ' OK '
+  clear_color
+  printf ']    %s' "$name"
   advance
 }
 
@@ -47,20 +51,29 @@ skip() {
   local reason="$1"
   [ -z "$reason" ] || reason=": $reason"
   go_to_column 0
-  printf " - %s (skipped%s)" "$name" "$reason"
+  printf '['
+  set_color 3
+  printf 'SKIP'
+  clear_color
+  printf ']    %s (skipped%s)' "$name" "$reason"
   advance
 }
 
 fail() {
   go_to_column 0
+  printf '['
+  set_color 1
+  printf 'FAIL'
+  clear_color
+  printf ']    '
   set_color 1 bold
-  printf " ✗ %s" "$name"
+  printf '%s' "$name"
   advance
 }
 
 log() {
   set_color 1
-  printf "   %s\n" "$1"
+  printf '          %s\n' "$1"
   clear_color
 }
 
