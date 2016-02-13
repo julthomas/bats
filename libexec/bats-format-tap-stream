@@ -72,7 +72,9 @@ fail() {
 }
 
 log() {
-  set_color 1
+  if [ -n "$log_color" ]; then
+    set_color "$log_color"
+  fi
   printf '          %s\n' "$1"
   clear_color
 }
@@ -153,6 +155,7 @@ while IFS= read -r line; do
   "begin "* )
     let index+=1
     name="${line#* $index }"
+    log_color=
     buffer begin
     flush
     ;;
@@ -167,6 +170,7 @@ while IFS= read -r line; do
     ;;
   "not ok "* )
     let failures+=1
+    log_color=1
     buffer fail
     ;;
   "# "* )
